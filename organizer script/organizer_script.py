@@ -1,6 +1,17 @@
 import shutil
 from pathlib import Path
 
+#Sort files into folders depending on type
+#Improve variable names (key & value)
+def sort_func(script_location):
+    #Iterate thru master_dict, check if extension is valid, determine appropriate folder based on extension, combine into path
+    for key, value in master_dict.items():
+         if value in ext_map:
+                file_type = value
+                file_dir = ext_map[value]
+                file_location = script_location/(key + value)
+                shutil.move(file_location,file_dir )
+
 #Create directories 
 def dir_create(dir_name):
     try:
@@ -25,11 +36,29 @@ master_dict = {}
 
 #Create folders for orginization
 
-image_dir = script_location / "images"
+image_dir = script_location / "pics"
 power_points_dir = script_location / "power_points"
 word_docs_dir = script_location / "word_docs"
+pdf_dir = script_location/"pdf_files"
+excel_dir = script_location/"excel_files"
 
-file_types = [image_dir,power_points_dir,word_docs_dir]
+#Points which folders extensions should go to 
+
+ext_map = {
+    ".pptx": power_points_dir,
+    ".ppt": power_points_dir,
+    ".docx": word_docs_dir,
+    ".doc": word_docs_dir,
+    ".jfif": image_dir,
+    ".jpg": image_dir,
+    ".png": image_dir,
+    ".xls.": excel_dir,
+    ".xlsx": excel_dir,
+    ".csv": excel_dir,
+    ".pdf": pdf_dir,
+}
+
+file_types = [image_dir,power_points_dir,word_docs_dir,pdf_dir,excel_dir]
 
 #Create directories to sort files into
 for file_type in file_types:
@@ -54,32 +83,7 @@ for item in script_location.iterdir():
         # Populate master_dict: key=filename (no extension), val=extension
         master_dict[item.stem] = item.suffix
 
-print(f"Files found: {[f.name for f in files]}")
-print("*"*20)
-print(f"Directories found: {directories}")
-print("*"*20)
-
-# 3. ACTION - Sort the files in the master directory depending on the extension (value)
-#Iterate thru dict by name, check value extension type 
-
-for key, value in master_dict.items():
-    if value == ".pptx":
-        file_location = script_location / (key+value)
-        shutil.move(file_location,power_points_dir )
-    if value == ".docx":
-        file_location = script_location / (key+value)
-        shutil.move(file_location, word_docs_dir)
-    if value == ".jfif":
-        file_location = script_location / (key+value)
-        shutil.move(file_location,image_dir) 
-    if value == ".jpg":
-        file_location = script_location / (key+value)
-        shutil.move(file_location,image_dir) 
-    if value == ".png":
-        file_location = script_location / (key+value)
-        shutil.move(file_location,image_dir)     
-
-
-        
+#MAIN
+sort_func(script_location)
 
 
