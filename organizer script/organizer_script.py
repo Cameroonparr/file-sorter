@@ -1,16 +1,45 @@
 import shutil
+import os
 from pathlib import Path
 
-#Sort files into folders depending on type
-#Improve variable names (key & value)
+#Need to handle duplicates 
+
 def sort_func(script_location):
+    move = False
     #Iterate thru master_dict, check if extension is valid, determine appropriate folder based on extension, combine into path
-    for key, value in master_dict.items():
-         if value in ext_map:
-                file_type = value
-                file_dir = ext_map[value]
-                file_location = script_location/(key + value)
-                shutil.move(file_location,file_dir )
+    for file_name, ext in master_dict.items():
+         #List of files found in target directory 
+         if ext in ext_map:
+                
+                file_dir = ext_map[ext]
+                file_location = script_location/(file_name + ext)
+                print(file_location)
+                path_check = Path(file_location/file_dir)
+
+                print("*"*20)
+                print(f"file name = {file_name}")
+                print(f"file extension = {ext}")
+                print(f"file_location is {file_location}")
+                print(f"file_dir is {file_dir}")
+                print("*"*20)
+                print(f" Path to be checked - {path_check}")
+                print("*" * 20)
+
+                #Compare file name to files in target directory, if match is found, print "Already exists", else move file to target directory
+                if path_check.exists():
+                    print("Path exists")
+                    if not os.listdir(path_check):
+                        print("Directory is empty, moving file...")
+                        shutil.move(file_location, path_check)
+                    else:
+                        print("Directory populated.. checking")
+                        for file in path_check.iterdir():
+                            print(f"Files found in target dir {file}")
+                            if file.stem == file_name:
+                                print(f"File {file_name} already exists in target directory")
+                            else:
+                                shutil.move(file_location, path_check)
+
 
 #Create directories 
 def dir_create(dir_name):
@@ -85,5 +114,6 @@ for item in script_location.iterdir():
 
 #MAIN
 sort_func(script_location)
+
 
 
