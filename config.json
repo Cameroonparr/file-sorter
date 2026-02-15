@@ -1,0 +1,15 @@
+{
+    "ext_map": {
+        ".pptx": "power_points",
+        ".ppt": "power_points",
+        ".docx": "word_docs",
+        ".doc": "word_docs",
+        ".jfif": "pics",
+        ".jpg": "pics",
+        ".png": "pics",
+        ".xls": "excel_files",
+        ".xlsx": "excel_files",
+        ".csv": "excel_files",
+        ".pdf": "pdf_files"
+    }
+}
