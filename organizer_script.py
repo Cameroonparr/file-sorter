@@ -3,9 +3,7 @@ import os
 import json
 from pathlib import Path
 
-#Fix bug converning duplicates
-#Implement json or yaml file to replace ext_map
-#Automate script
+#####################################################################
 
 def sort_func(script_location, ext_map,files):
     #Iterate thru master_dict, check if extension is valid, determine appropriate folder based on extension, combine into path
@@ -41,7 +39,7 @@ def sort_func(script_location, ext_map,files):
                         else:
                                 print(f"{file_name} already exists, skipping")
 
-
+#####################################################################
 #Create directories 
 def dir_create(dir_name):
     try:
@@ -54,42 +52,43 @@ def dir_create(dir_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-files = []
+#####################################################################
 
-# 1. Setup Path - Wherever script is 
-script_location = Path(__file__).resolve().parent
-print(f"Script location: {script_location}")
-print("*"*20)
+def main():
 
-#Setup JSON configuration 
-#With closes json file
-#Load json file contents into a dir
-with open(script_location/'config.json') as f:
-     ext_map = json.load(f)["ext_map"]
+    files = []
+    # 1. Setup Path - Wherever script is 
+    script_location = Path(__file__).resolve().parent
+    print(f"Script location: {script_location}")
+    print("*"*20)
 
-#Contains just files & extensions, no dirs 
-master_dict = {}
+    #Setup JSON configuration 
+    #With closes json file
+    #Load json file contents into a dir
+    with open(script_location/'config.json') as f:
+        ext_map = json.load(f)["ext_map"]
 
-#Create directories to sort files into
-for file_type in set(ext_map.values()):
-    dir_create(script_location/file_type)
+    #Create directories to sort files into
+    for file_type in set(ext_map.values()):
+        dir_create(script_location/file_type)
 
-# 2. SCAN: Use .iterdir() to get Path objects
+    # 2. SCAN: Use .iterdir() to get Path objects
 
-for item in script_location.iterdir():
-        # Populate master_dict: key=filename (no extension), val=extension
-        if item.is_file():
-             #Skip script or config.json from being moved
-             if  item.name == Path(__file__).name:
-                  continue
-             if item.name == "config.json":
-                  continue 
-             files.append(item)
-             
-        
-        master_dict[item.stem] = item.suffix
+    for item in script_location.iterdir():
+            # Populate file list with path objects
+            if item.is_file():
+                #Skip script or config.json from being moved
+                if  item.name == Path(__file__).name:
+                    continue
+                if item.name == "config.json":
+                    continue 
+                files.append(item)
+    
+    sort_func(script_location, ext_map, files)
+     
+#####################################################################
 
-#MAIN
-sort_func(script_location, ext_map, files)
+if __name__ == "__main__":
+     main()
 
 
